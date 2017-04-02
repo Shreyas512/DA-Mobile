@@ -30,6 +30,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *postsBackground;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *weatherWidth;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *menuWidth;
+@property (weak, nonatomic) IBOutlet UIImageView *weatherIcon;
 
 @end
 

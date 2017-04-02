@@ -58,11 +58,19 @@
         return cell;
     }else{
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"weatherCellid" forIndexPath:indexPath];
+        
+        //find the dictionary in self.weathers array at the correct index.
         NSDictionary *dic = [self.weathers objectAtIndex:indexPath.row];
+        
         NSString *str = [NSString stringWithFormat:@"%@ - %@", [dic objectForKey:@"low"], [dic objectForKey:@"high"]];
         cell.textLabel.text = [dic objectForKey:@"date"];
         cell.detailTextLabel.text = str;
-        cell.imageView.image = [ViewController imageWithImage:[UIImage imageNamed:@"rainy"] scaledToSize:CGSizeMake(25, 25)];
+        
+        //String used to present weather type
+        //associated picture
+        cell.imageView.image = [ViewController imageWithImage:[self setWeatherImage:[dic objectForKey:@"text"]] scaledToSize:CGSizeMake(25, 25)];
+
+
         return cell;
     }
     
@@ -232,6 +240,7 @@
     
     if (self.weathers) {
         self.tempLabel.text = [[self.weathers lastObject] objectForKey:@"temp"];
+        self.weatherIcon.image = [self setWeatherImage: [[self.weathers lastObject] objectForKey:@"text"]];
         [self.weathers removeLastObject];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.weatherTable reloadData];
@@ -246,6 +255,37 @@
             [self presentViewController:alert animated:YES completion:nil];
         });
     }
+}
+
+-(UIImage*) setWeatherImage:(NSString*) weatherType {
+    
+    if ([weatherType containsString:@"Cloudy"]) {
+        return [UIImage imageNamed:@"cloudy"];
+    }
+    else if ([weatherType containsString:@"Rainy"] || [weatherType containsString:@"Showers"]) {
+        return [UIImage imageNamed:@"rainy"];
+    }
+    else if ([weatherType containsString:@"Sunny"]) {
+        return [UIImage imageNamed:@"sunny"];
+    }
+    else if ([weatherType containsString:@"Snow"]) {
+        return [UIImage imageNamed:@"snow"];
+    }
+    else if ([weatherType containsString:@"Fair"]) {
+        return [UIImage imageNamed:@"snow"];
+    }
+    else if ([weatherType containsString:@"Sleet"]) {
+        return [UIImage imageNamed:@"sleet"];
+    }
+    else if ([weatherType containsString:@"Thunder"]) {
+        return [UIImage imageNamed:@"thunder"];
+    }
+    else if ([weatherType containsString:@"Windy"]) {
+        return [UIImage imageNamed:@"windy"];
+    }
+    else {
+        return [UIImage imageNamed:@"unknown"];
+        }
 }
 
 #pragma mark - View lifecycle
@@ -291,7 +331,7 @@
     if ([[segue destinationViewController] isKindOfClass:[DetailViewController class]]) {
         DetailViewController *vc = [segue destinationViewController];
         NSDictionary *dic = [self.posts objectAtIndex:[self.table indexPathForSelectedRow].row];
-        vc.contentImage = [dic objectForKey:@"summery"];
+        vc.contentString = [dic objectForKey:@"summery"];
         vc.contentImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[dic objectForKey:@"img_src"]]]];
     }
 }
